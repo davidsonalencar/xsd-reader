@@ -12,7 +12,6 @@ class RestrictionUtils
      * @param mixed $value
      * @param array $enumeration
      * @throws RestrictionException
-     * @return mixed
      */
     public static function checkEnumeration($value, $enumeration)
     {
@@ -24,7 +23,6 @@ class RestrictionUtils
                     $value,
                     $enumeration);
         }   
-        return $value;
     }
     
     /**
@@ -33,7 +31,6 @@ class RestrictionUtils
      * @param mixed $value
      * @param string $pattern
      * @throws RestrictionException
-     * @return mixed
      */
     public static function checkPattern($value, $pattern)
     {
@@ -44,7 +41,6 @@ class RestrictionUtils
                     $value,
                     $pattern);
         }
-        return $value;
     }
     
     /**
@@ -72,7 +68,6 @@ class RestrictionUtils
      * @param float $value
      * @param int $fractionDigits
      * @throws RestrictionException
-     * @return float
      */
     public static function checkFractionDigits($value, $fractionDigits) 
     {
@@ -94,7 +89,6 @@ class RestrictionUtils
                     $value,
                     $fractionDigits);
         }
-        return $numeric;
     }
     
     /**
@@ -103,7 +97,6 @@ class RestrictionUtils
      * @param float $value
      * @param int $totalDigits
      * @throws RestrictionException
-     * @return float
      */
     public static function checkTotalDigits($value, $totalDigits) 
     {
@@ -128,7 +121,6 @@ class RestrictionUtils
                     $value,
                     $totalDigits);
         }
-        return $numeric;
     }
     
     /**
@@ -137,7 +129,6 @@ class RestrictionUtils
      * @param mixed $value
      * @param int $maxExclusive
      * @throws RestrictionException
-     * @return mixed
      */
     public static function checkMaxExclusive($value, $maxExclusive) 
     {
@@ -149,7 +140,6 @@ class RestrictionUtils
                     $value,
                     $maxExclusive);
         }
-        return $numeric;
     }
     
     /**
@@ -158,7 +148,6 @@ class RestrictionUtils
      * @param mixed $value
      * @param int $maxInclusive
      * @throws RestrictionException
-     * @return mixed
      */
     public static function checkMaxInclusive($value, $maxInclusive) 
     {
@@ -170,7 +159,6 @@ class RestrictionUtils
                     $value,
                     $maxInclusive);
         }
-        return $numeric;
     }
     
     /**
@@ -208,7 +196,6 @@ class RestrictionUtils
      * @param int $length
      * @param string $nativeType
      * @throws RestrictionException
-     * @return mixed
      */
     public static function checkLength($value, $length, $nativeType=null) 
     {
@@ -219,7 +206,6 @@ class RestrictionUtils
                     $value,
                     $length);
         }
-        return $value;
     }    
     
     /**
@@ -229,7 +215,6 @@ class RestrictionUtils
      * @param int $maxLength
      * @param string $nativeType
      * @throws RestrictionException
-     * @return mixed
      */
     public static function checkMaxLength($value, $maxLength, $nativeType=null) 
     {
@@ -240,7 +225,6 @@ class RestrictionUtils
                     $value,
                     $maxLength);
         }
-        return $value;
     }
     
     /**
@@ -250,7 +234,6 @@ class RestrictionUtils
      * @param int $minLength
      * @param string $nativeType
      * @throws RestrictionException
-     * @return mixed
      */
     public static function checkMinLength($value, $minLength, $nativeType=null) 
     {
@@ -261,7 +244,6 @@ class RestrictionUtils
                     $value,
                     $minLength);
         }
-        return $value;
     }
     
     /**
@@ -270,7 +252,6 @@ class RestrictionUtils
      * @param mixed $value
      * @param int $minExclusive
      * @throws RestrictionException
-     * @return mixed
      */
     public static function checkMinExclusive($value, $minExclusive) 
     {
@@ -282,7 +263,6 @@ class RestrictionUtils
                     $value,
                     $minExclusive);
         }
-        return $numeric;
     }
     
     /**
@@ -291,7 +271,6 @@ class RestrictionUtils
      * @param mixed $value
      * @param int $minInclusive
      * @throws RestrictionException
-     * @return mixed
      */
     public static function checkMinInclusive($value, $minInclusive) 
     {
@@ -303,7 +282,6 @@ class RestrictionUtils
                     $value,
                     $minInclusive);
         }
-        return $numeric;
     }
 
     /**
@@ -313,7 +291,7 @@ class RestrictionUtils
      * @param string $whiteSpace
      * @return mixed
      */
-    public static function checkWhiteSpace($value, $whiteSpace) 
+    public static function buildWhiteSpace($value, $whiteSpace) 
     {
         $output = $value;
         if ($whiteSpace == 'replace' || $whiteSpace == 'collapse') {
@@ -323,6 +301,31 @@ class RestrictionUtils
             $output = preg_replace('/\s+/', ' ', $output);
         }
         return $output;
-    }	
+    }
+    
+    /**
+     * Specifies required property
+     * 
+     * @param mixed $value
+     * @param int $min
+     * @param int $max
+     * @throws RestrictionException
+     */
+    public static function checkRequired($value, $min, $max) 
+    {
+        $count = 0;
+        if (is_array($value)) {
+            $count = count($value);
+        } else {
+            $count = (isset($value) && ($value !== null) && $value !== '') ? 1 : 0;
+        }
+        if ($count < $min || ($count <> -1 && $count > $min)) {
+            throw new RestrictionException(
+                    "The property required with min. '{$min}' and max. '{$max}'", 
+                    RestrictionException::ERROR_CODE_REQUIRED,
+                    $value,
+                    $min.'-'.$max);
+        }
+    }
 
 }

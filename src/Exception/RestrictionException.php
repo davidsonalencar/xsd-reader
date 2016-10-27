@@ -16,13 +16,16 @@ class RestrictionException extends \Exception
     const ERROR_CODE_MAX_LENGTH = 11;
     const ERROR_CODE_VALUE = 12;
     const ERROR_CODE_GTE = 13;
+    const ERROR_CODE_REQUIRED = 14;
     
     protected $value;
     protected $verifier;    
+    protected $property;    
     
-    public function __construct($message = "", $code = 0, $value = "", $verifier = "", \Exception $previous = null) {
+    public function __construct($message = "", $code = 0, $value = "", $verifier = "", $property = "", \Exception $previous = null) {
         $this->value = $value;
         $this->verifier = $verifier;
+        $this->property = $property;
         parent::__construct($message, $code, $previous);
     }
     
@@ -34,6 +37,11 @@ class RestrictionException extends \Exception
     public function getVerifier() 
     {
         return $this->verifier;
+    }
+    
+    public function getProperty() 
+    {
+        return $this->property;
     }
     
 }
